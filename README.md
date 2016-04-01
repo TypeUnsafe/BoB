@@ -98,6 +98,5 @@ let myTitleComponent = new BoB.Element({
 
 - documentation
 - samples
-- attributes
 - ...
 
