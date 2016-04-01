@@ -6,7 +6,7 @@ let broker = new BoB.Broker();
 
 let myTitleComponent = new BoB.Element({
   tagName:"my-title",
-  template: data => `<h1>${data.title}</h1>`,
+  template: (element, data) => `<h1>${data.title}</h1>`,
   created: (element, data) => {},
   attached: (element, data) => {
     console.info("myTitleComponent[attached]", element, data)
@@ -17,7 +17,7 @@ let myTitleComponent = new BoB.Element({
 
 let taDaComponent = new BoB.Element({
   tagName:"ta-da",
-  template: data => `<b>Hello ${data.message}</b>`,
+  template: (element, data) => `<b>Hello ${data.message}</b>`,
   created: (element, data) => {
 
     //data.broker.addSubscription("yo/tada", element);
@@ -42,7 +42,7 @@ let taDaComponent = new BoB.Element({
 
 let littleButtonComponent = new BoB.Element({
   tagName:"little-button",
-  template: data => `<button>Click me!</button>`,
+  template: (element, data) => `<button>Click me!</button>`,
   created: (element, data) => {
     element.addEventListener('click', (e) => {
       //data.broker.notify("yo/tada", "You've been notified!");
@@ -53,7 +53,7 @@ let littleButtonComponent = new BoB.Element({
 
 let otherButtonComponent = new BoB.Element({
   tagName:"other-button",
-  template: data => `<button>Click me too!</button>`,
+  template: (element, data) => `<button>Click me too!</button>`,
   created: (element, data) => {
     element.addEventListener('click', (e) => {
       //data.broker.notify("hi/tada", "You've been notified!");

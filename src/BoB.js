@@ -23,13 +23,14 @@ let BoB = (function () {
       elementProto.createdCallback = options.created !== undefined
         ? function() {
           shadow = this.createShadowRoot();
+          shadow.innerHTML = options.template(this, data);
           options.created(this, data);
-          shadow.innerHTML = options.template(data);
+          //shadow.innerHTML = options.template(data);
         }
         : () => {throw Error(`${options.tagName.toLowerCase()}: created method is undefined!`);};
 
       elementProto.refresh = function () {
-        shadow.innerHTML = options.template(options.data);
+        shadow.innerHTML = options.template(this, options.data);
       };
 
       elementProto.attachedCallback = options.attached !== undefined
