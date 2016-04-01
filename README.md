@@ -14,7 +14,7 @@ The smallest WebComponents framework, **only for Chrome**
 ```javascript
 let myTitleComponent = new BoB.Element({
   tagName:"my-title",
-  template: data => `<h1>${data.title}</h1>`,
+  template: (element, data) => `<h1>${data.title}</h1>`,
   created: (element, data) => {
     console.info("myTitleComponent is created")
   },
@@ -74,6 +74,24 @@ element.onMessage = (topic, message) => {
     element.publish("infos", "I'm refreshed!");
   }
 }
+```
+
+### Play with tag attributes
+
+```html
+<my-title title="Hello World! I'm BoB!"></my-title>
+```
+
+For example, if you want to get the value of the title attribute to use it (ie with the template), you can use element (ie: `element.title`) instead of data:
+
+```javascript
+let myTitleComponent = new BoB.Element({
+  tagName:"my-title",
+  template: (element, data) => `<h1>${element.title}</h1>`,
+  created: (element, data) => {
+    console.log(element.title);
+  }
+});
 ```
 
 ## TODO
