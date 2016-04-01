@@ -11,7 +11,7 @@ The smallest WebComponents framework, **only for Chrome**
 
 ### Create a component
 
-```javascript`
+```javascript
 let myTitleComponent = new BoB.Element({
   tagName:"my-title",
   template: data => `<h1>${data.title}</h1>`,
@@ -32,11 +32,11 @@ Add the new tag in your html code:
 
 ```html
 <my-title></my-title>
-``
+```
 
 Register the component:
 
-```javascript`
+```javascript
 myTitleComponent.register({title:"Who is this BoB?"});
 ```
 
