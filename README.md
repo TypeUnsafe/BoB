@@ -94,6 +94,40 @@ let myTitleComponent = new BoB.Element({
 });
 ```
 
+## Cook Book
+
+### Iterate on list and display result
+
+```javascript
+let myListComponent = new BoB.Element({
+  tagName:"my-list",
+  template: (element, data) => `
+  <ul>${
+    data.humans.map(
+      (human) => `
+        <li>
+          <b>${human.name}</b>
+        </li>
+        `
+    ).join("")    
+    }</ul>
+  `,
+  created: (element, data) => {
+    // foo ...
+  }
+});
+```
+And:
+
+```javascript
+myListComponent.register({humans:[
+  {name:"John Doe"}, {name:"Jane Doe"}, {name:"Bob Morane"}
+]});
+```
+
+You can see a complete sample in `samples/04-lists`
+
+
 ## TODO
 
 - documentation
