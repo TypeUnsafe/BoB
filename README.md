@@ -94,7 +94,7 @@ let myTitleComponent = new BoB.Element({
 });
 ```
 
-### BoB provide a router
+### BoB provides a router
 
 You need define a broker and a router:
 
