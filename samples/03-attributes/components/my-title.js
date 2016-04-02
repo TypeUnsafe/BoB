@@ -1,7 +1,3 @@
-/**
- * Created by k33g_org on 01/04/16.
- */
-
 let myTitleComponent = new BoB.Element({
   tagName:"my-title",
   template: (element, data) => `<h1>${element.title}</h1>`,
