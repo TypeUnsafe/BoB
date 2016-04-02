@@ -4,6 +4,9 @@
  * @type {{Element, Broker}}
  */
 let BoB = (function () {
+  /**
+   * Element
+   */
   class Element {
     /**
      * 
@@ -69,7 +72,10 @@ let BoB = (function () {
       return elementProto;
     }
   }
-  
+
+  /**
+   * Broker
+   */
   class Broker {
     /**
      * 
@@ -112,5 +118,54 @@ let BoB = (function () {
         });
     }
   }
-  return {Element: Element, Broker: Broker};
+
+  /**
+   * Router
+   */
+  class Router {
+    /**
+     *
+     * @param options
+     */
+    constructor (options={}) {
+      Object.assign(this, options);
+    }
+
+    /**
+     *
+     * @param uri
+     */
+    match (uri) { //using hash
+      // remove #/ from uri
+      uri = uri.replace("#\/","");
+      // ie: http://localhost:3006/#/hello/bob/morane
+      // becomes /hello/bob/morane
+      // to split uri with "/" and keep only no empty items
+      let uriParts = uri.split("/").filter((part)=>part.length>0);
+      // ie: ["hello", "bob", "morane"]
+      // key to search -> "hello"
+      let route = uriParts[0];
+      // parameters to pass to the method -> ["bob", "morane"]
+      let params = uriParts.slice(1);
+      
+      (this.broker !== undefined && this.topic !== undefined
+        ? () => this.broker.notify(this.topic, {route, params, uri})
+        : () => {throw Error(`${this.constructor.name}: broker or/and topic is(are) undefined!`);})();
+    }
+
+    /**
+     *
+     */
+    listen () {
+      // when router is listening
+      // check url at first time (first load) (useful to bookmark functionality)
+      this.match(window.location.hash);
+      /* subscribe to onpopstate */
+      window.onpopstate = (event) => {
+        this.match(window.location.hash);
+      };
+    }
+  }
+  
+  return {Element: Element, Broker: Broker, Router: Router};
 }());
