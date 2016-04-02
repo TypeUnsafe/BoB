@@ -94,6 +94,47 @@ let myTitleComponent = new BoB.Element({
 });
 ```
 
+### BoB provide a router
+
+You need define a broker and a router:
+
+```javascript
+let broker = new BoB.Broker();
+
+let router = new BoB.Router({broker: broker, topic:"router"});
+router.listen();
+```
+
+Now, on each `popstate` event, the router publish route's root, uri and params on the "router" topic.
+Then you can define a kind of **observer** object to be notified:
+
+```javascript
+let observer = {
+  onMessage: (topic, message) => {
+    console.log("route", message.route); // if uri == "yo/1/2/3" you get "yo"
+    console.log("uri", message.uri);
+    console.log("route", message.params); // if uri == "yo/1/2/3" you get [1,2,3]
+  }
+};
+broker.addSubscription("router", observer);
+```
+
+Of course, you can subscribe to the router with a `BoB.Element`:
+
+```javascript
+let myTitleComponent = new BoB.Element({
+  tagName:"my-title",
+  template: (element, data) => `<h1>${element.title}</h1>`,
+  created: (element, data) => {
+    element.subscribe("router");
+    element.onMessage = (topic, message) => {
+      element.title = message.uri;
+      element.refresh();
+    };
+  }
+});
+```
+
 ## Cook Book
 
 ### Iterate on list and display result
