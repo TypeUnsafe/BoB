@@ -17,6 +17,5 @@ let myListComponent = new BoB.Element({
       data.humans.push(message.human);
       element.refresh();
     }
-
   }
 });

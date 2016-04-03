@@ -23,6 +23,7 @@ let BoB = (function () {
       let elementProto = Object.create(HTMLElement.prototype), options = this.options, shadow = null;
       options.data = data;
 
+      /*
       elementProto.createdCallback = options.created !== undefined
         ? function() {
           shadow = this.createShadowRoot();
@@ -31,7 +32,13 @@ let BoB = (function () {
           //shadow.innerHTML = options.template(data);
         }
         : () => {throw Error(`${options.tagName.toLowerCase()}: created method is undefined!`);};
-
+      */
+      elementProto.createdCallback = function() {
+        shadow = this.createShadowRoot();
+        shadow.innerHTML = options.template(this, data);
+        if (options.created !== undefined) options.created(this, data);
+      };
+      
       elementProto.refresh = function () {
         shadow.innerHTML = options.template(this, options.data);
       };

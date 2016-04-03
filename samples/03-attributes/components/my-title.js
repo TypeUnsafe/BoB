@@ -10,9 +10,7 @@ let myTitleComponent = new BoB.Element({
       element.refresh();
     }
   },
-  attached: (element, data) => {
-
-  }
+  attached: (element, data) => {}
 });
 
 

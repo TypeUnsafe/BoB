@@ -1,7 +1,3 @@
-/**
- * Created by k33g_org on 01/04/16.
- */
-
 let myFormComponent = new BoB.Element({
   tagName:"my-form",
   template: (element, data) => `<div>
@@ -9,13 +5,17 @@ let myFormComponent = new BoB.Element({
       <input type="text" placeholder="${data.placeholder}"/>
       <button onclick="return false">Click Me!</button>
     </form>
+    <!-- my other component -->
+    <my-display title="Form sample"></my-display>
   </div>`,
   created: (element, data) => {
+    
     element.first("button").addEventListener('click', (e) => {
-      console.log("Value", element.first("input").value);
+      let value = element.first("input").value;
+      let myDisplayTag = element.first("my-display");
+      myDisplayTag.title = value;
+      myDisplayTag.refresh();
     });
   },
-  attached: (element, data) => {
-
-  }
+  attached: (element, data) => {}
 });
