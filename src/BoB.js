@@ -1,9 +1,16 @@
+'use babel'; // for Atom support only
+let root = this;
+
+if (typeof exports === 'undefined') {
+  root.BoB = root.BoB || {};
+}
 /**
  * Bob is a WebComponents framework
  * Inspired from http://www.html5rocks.com/en/tutorials/webcomponents/customelements
  * @type {{Element, Broker}}
  */
-let BoB = (function () {
+
+(function (BoB) {
   /**
    * Element
    */
@@ -174,5 +181,11 @@ let BoB = (function () {
     }
   }
   
-  return {Element: Element, Broker: Broker, Router: Router};
-}());
+  //return {Element: Element, Broker: Broker, Router: Router};
+
+  BoB.Element = Element;
+  BoB.Broker = Broker;
+  BoB.Router = Router;
+  
+  
+})(root.BoB || exports);
