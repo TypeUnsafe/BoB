@@ -182,6 +182,49 @@ First you have to get `webcomponents.js`, then:
 <script src="../../src/BoB.js"></script>
 ```
 
+### Create components for package view in AtomEditor
+
+In `lib/bob-package-views.js` (if you've named your package `bob-package`):
+
+```javascript
+'use babel';
+
+import BoB from './bob';
+
+let myTitleComponent = new BoB.Element({
+  tagName:"my-title",
+  template: (element, data) => `<h1>${element.title}</h1>`
+});
+
+let myApplicationComponent = new BoB.Element({
+  tagName:"my-application",
+  template: (element, data) => `
+  <div>
+    <my-title title="Bob Package"></my-title>
+    <h2>${data.info}</h2>
+  </div>
+  `,
+  created: (element, data) => {
+    console.log(data);
+  }
+});
+
+export default class BobPackageView {
+
+  constructor(serializedState) {
+    // Register BoB Elements
+    myTitleComponent.register();
+    myApplicationComponent.register({info:"Work in progress..."});
+    // Create root element
+    this.element = document.createElement('my-application');
+    this.element.classList.add('bob-package');
+
+  }
+  
+  etc...
+```
+
+
 ## TODO
 
 - documentation
