@@ -94,7 +94,7 @@ let myTitleComponent = new BoB.Element({
 });
 ```
 
-### BoB provides a router
+## BoB provides a router
 
 You need define a broker and a router:
 
@@ -132,6 +132,70 @@ let myTitleComponent = new BoB.Element({
       element.refresh();
     };
   }
+});
+```
+
+## Models and Collections
+
+*Documentation and samples are in progress...*
+
+- models and collections can use REST API
+- collections provide helpers to deals with local storage
+
+### Define a model
+
+```javascript
+class Cow extends BoB.Model {
+  constructor(fields, broker) {
+    super(
+      fields,
+      {
+        broker: broker,
+        topic:"model/cow",
+        events:{onSet:true, onSave:true, onFetch:true, onRemove:true},
+        url:"/api/cows"
+      }
+    );
+  }
+}
+```
+
+### Define a collection
+
+```javascript
+class Cows extends BoB.Collection {
+  constructor(broker) {
+    super(
+      {
+        model: Cow,
+        broker: broker,
+        topic:"collection/cows",
+        events:{onSave: true, onAdd:true, onFetch:true, onRemove:true},
+        url:"/api/cows"
+      }
+    );
+  }
+}
+```
+
+### Play with models and collections
+
+```javascript
+let broker = new BoB.Broker({log:true}); // if log is true you can see all messages (and publication topics)
+let cookie = new Cow({name:"Cookie"}, broker); // this is a modet
+let cows = new Cows(broker); // this is a collection
+
+cookie.save().then(()=>{
+  cookie.set("name", "COOKIE");
+  cookie.save().then(data => {
+    cookie.fetch().then(()=> {
+      cookie.remove()
+    })
+  });
+});
+
+cows.fetch().then((data) => {
+  console.log(cows.toString())
 });
 ```
 
@@ -223,7 +287,6 @@ export default class BobPackageView {
   
   etc...
 ```
-
 
 ## TODO
 
