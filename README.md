@@ -26,6 +26,60 @@ let myTitleComponent = new BoB.Element({
 });
 ```
 
+#### Component with dom events
+
+You need to set the `events` property in the options for the element constructor, to define event listeners;
+
+```javascript
+let littleButtonComponent = new BoB.Element({
+  tagName:"little-button",
+  template: (element, data) => `<button>Click me!</button>`,
+  created: (element, data) => {
+    // foo
+  },
+  events: (element, data) => {
+    element.addEventListener('click', (e) => {
+      // clicked
+    });
+  }
+});
+```
+
+### Access to nested item in a component
+
+`element` has 2 selector methods:
+
+- `element.first(selector)`: returns the first found node
+- `element.select(selector)`: returns an array of all found nodes
+
+```javascript
+let myFormComponent = new BoB.Element({
+  tagName:"my-form",
+  template: (element, data) => `<div>
+    <form>
+      <input type="text" placeholder="${data.placeholder}"/>
+      <button onclick="return false">Click Me!</button>
+    </form>
+    <!-- my other component -->
+    <my-display title="Form sample"></my-display>
+  </div>`,
+  created: (element, data) => {
+    // foo
+  },
+  attached: (element, data) => {
+    // foo
+  },
+  events: (element, data) => {
+    element.first("button").addEventListener('click', (e) => {
+      let value = element.first("input").value;
+      let myDisplayTag = element.first("my-display");
+      myDisplayTag.title = value;
+      myDisplayTag.refresh();
+    });
+  }
+});
+```
+
 ### Mount a component
 
 Add the new tag in your html code:

@@ -39,6 +39,9 @@ let littleButtonComponent = new BoB.Element({
   tagName:"little-button",
   template: (element, data) => `<button>Click me!</button>`,
   created: (element, data) => {
+
+  },
+  events: (element, data) => {
     element.addEventListener('click', (e) => {
       element.publish('yo/tada', "YOU'VE BEEN NOTIFIED!");
     });
@@ -49,6 +52,9 @@ let otherButtonComponent = new BoB.Element({
   tagName:"other-button",
   template: (element, data) => `<button>Click me too!</button>`,
   created: (element, data) => {
+
+  },
+  events: (element, data) => {
     element.addEventListener('click', (e) => {
       element.publish("hi/tada", "You've been notified!!!");
     });
