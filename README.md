@@ -288,6 +288,65 @@ export default class BobPackageView {
   etc...
 ```
 
+### How to style BoB.Element
+
+#### From "outside"
+
+**my-button.js** file:
+```javascript
+let myButtonComponent = new BoB.Element({
+  tagName:"my-button",
+  template: (element, data) => `<button>Click me!</button>`,
+});
+```
+
+**index.html** file:
+```html
+<style>
+  my-button::shadow button {
+    color: blue
+  }
+</style>
+  
+<my-component></my-component>
+```
+
+#### From "inside"
+
+**my-button.js** file:
+```javascript
+let myButtonComponent = new BoB.Element({
+  tagName:"my-button",
+  template: (element, data) => `
+    <style>
+      button { color: blue } 
+    </style>
+    <button>Click me!</button>
+  `,
+});
+```
+
+#### From "inside", with an external css file
+
+**my-button.css** file:
+```css
+button { color: blue } 
+```
+
+**my-button.js** file:
+```javascript
+let myButtonComponent = new BoB.Element({
+  tagName:"my-button",
+  template: (element, data) => `
+    <style>
+      @import "./components/my-button.css" 
+    </style>
+    <button>Click me!</button>
+  `,
+});
+```
+
+
 ## TODO
 
 - documentation
