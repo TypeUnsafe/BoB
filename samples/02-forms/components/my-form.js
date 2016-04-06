@@ -10,12 +10,16 @@ let myFormComponent = new BoB.Element({
   </div>`,
   created: (element, data) => {
     
+  },
+  attached: (element, data) => {
+    
+  },
+  events: (element, data) => {
     element.first("button").addEventListener('click', (e) => {
       let value = element.first("input").value;
       let myDisplayTag = element.first("my-display");
       myDisplayTag.title = value;
       myDisplayTag.refresh();
     });
-  },
-  attached: (element, data) => {}
+  }
 });

@@ -1,71 +1,71 @@
 /*[md]
-# BoB - Tiny Web Component Framework
+ # BoB - Tiny Web Component Framework
 
-BoB is a WebComponents framework, Inspired from [http://www.html5rocks.com/en/tutorials/webcomponents/customelements](http://www.html5rocks.com/en/tutorials/webcomponents/customelements).
+ BoB is a WebComponents framework, Inspired from [http://www.html5rocks.com/en/tutorials/webcomponents/customelements](http://www.html5rocks.com/en/tutorials/webcomponents/customelements).
 
-BoB provides 5 Classes:
+ BoB provides 5 Classes:
 
-- `BoB.Element`
-- `BoB.Broker`
-- `BoB.Router`
-- `BoB.Model`
-- `BoB.Collection`
-*/
+ - `BoB.Element`
+ - `BoB.Broker`
+ - `BoB.Router`
+ - `BoB.Model`
+ - `BoB.Collection`
+ */
 'use babel'; // for Atom support only
 let root = this;
 if (typeof exports === 'undefined') { root.BoB = root.BoB || {}; }
 
 (function (BoB) {
-/*[md]
-## Class Element
+  /*[md]
+   ## Class Element
 
-### Methods
+   ### Methods
 
-This class allows to define and register custom elements
+   This class allows to define and register custom elements
 
-#### constructor
+   #### constructor
 
-- `@param options`
+   - `@param options`
 
-Minimal options are: `tagName` and `template`:
+   Minimal options are: `tagName` and `template`:
 
-```javascript
-  let myTag = new BoB.Element({
-  tagName:"my-tag",
-  template: (element, data) => `<p>${data.message}</p>`
-});
-```
+   ```javascript
+   let myTag = new BoB.Element({
+   tagName:"my-tag",
+   template: (element, data) => `<p>${data.message}</p>`
+   });
+   ```
 
-Other options: (wip)
+   Other options: (wip)
 
-#### register
+   #### register
 
-- `@param data`
-- `@returns {HTMLElement}`
+   - `@param data`
+   - `@returns {HTMLElement}`
 
-Put a tag in you HTML code: `<my-tag></my-tag>`, then, you have to register your component to mount it to the DOM:
+   Put a tag in you HTML code: `<my-tag></my-tag>`, then, you have to register your component to mount it to the DOM:
 
-```javascript
-myTag.register({message:"Hello"})
-```
+   ```javascript
+   myTag.register({message:"Hello"})
+   ```
 
-You can path data to the component as parameter of `register` method. 
-For example if your template equals to:
+   You can path data to the component as parameter of `register` method. 
+   For example if your template equals to:
 
-```javascript
-(element, data) => `<p>${data.firstName} ${data.lastName}</p>`
-```
+   ```javascript
+   (element, data) => `<p>${data.firstName} ${data.lastName}</p>`
+   ```
 
-Then you can register your component like this:
-```javascript
-myTag.register({firstName:"Bob", lastName:"Morane"})
-```
+   Then you can register your component like this:
+   ```javascript
+   myTag.register({firstName:"Bob", lastName:"Morane"})
+   ```
 
-##### element methods (wip)
+   ##### element methods (wip)
 
 
-##### element attributes (wip)
-*/
+   ##### element attributes (wip)
+   */
   class Element {
 
     constructor(options = {}) {
@@ -80,10 +80,12 @@ myTag.register({firstName:"Bob", lastName:"Morane"})
         shadow = this.createShadowRoot();
         shadow.innerHTML = options.template(this, data);
         if (options.created !== undefined) options.created(this, data);
+        if (options.events !== undefined) options.events(this, data); // allows to "save" dom events and reuse them after refresh
       };
-      
+
       elementProto.refresh = function () {
         shadow.innerHTML = options.template(this, options.data);
+        if (options.events !== undefined) options.events(this, data);
       };
 
       elementProto.attachedCallback = options.attached !== undefined
@@ -99,7 +101,7 @@ myTag.register({firstName:"Bob", lastName:"Morane"})
           ? () => data.broker.addSubscription(topic, this)
           : () => {throw Error(`${options.tagName.toLowerCase()}: broker is undefined!`);})();
       };
-      
+
       elementProto.unsubscribe = function(topic) {
         //TODO
       };
@@ -123,40 +125,40 @@ myTag.register({firstName:"Bob", lastName:"Morane"})
     }
   }
 
-/*[md]
-## Class Broker
+  /*[md]
+   ## Class Broker
 
-### Methods
-This class allows to create a messages broker to communicate between components
+   ### Methods
+   This class allows to create a messages broker to communicate between components
 
-#### constructor
+   #### constructor
 
-- `@param options`
+   - `@param options`
 
-All options passed to the constructor become properties of the instance of Broker
+   All options passed to the constructor become properties of the instance of Broker
 
-#### addSubscription
+   #### addSubscription
 
-- `@param topic`
-- `@param object`
+   - `@param topic`
+   - `@param object`
 
-Description: (wip)
+   Description: (wip)
 
-#### removeSubscription
+   #### removeSubscription
 
-- `@param topic`
-- `@param object`
+   - `@param topic`
+   - `@param object`
 
-Description: (wip)
+   Description: (wip)
 
-#### notify
+   #### notify
 
-- `@param topic`
-- `@param message`
-- `@returns object`
+   - `@param topic`
+   - `@param message`
+   - `@returns object`
 
-Description: (wip)
-*/
+   Description: (wip)
+   */
   class Broker {
     constructor(options = {}) {
       Object.assign(this, options);
@@ -182,55 +184,55 @@ Description: (wip)
     }
   }
 
-/*[md]
-## Class Router
+  /*[md]
+   ## Class Router
 
-### Methods
-This class allows to create a router to listen popstate events
+   ### Methods
+   This class allows to create a router to listen popstate events
 
-#### constructor
+   #### constructor
 
-- `@param options`
+   - `@param options`
 
-All options passed to the constructor become properties of the instance of Router
+   All options passed to the constructor become properties of the instance of Router
 
-Mandatory: you need to pass a `broker` and a `topic` to the constructor:
+   Mandatory: you need to pass a `broker` and a `topic` to the constructor:
 
-```javascript
-let router = new BoB.Router({broker: broker, topic:"router"})
-router.listen();
-```
+   ```javascript
+   let router = new BoB.Router({broker: broker, topic:"router"})
+   router.listen();
+   ```
 
-Then you can subscribe to the topic of the router
+   Then you can subscribe to the topic of the router
 
-```javascript
-let observer = {
-  onMessage: (topic, message) => {
-    console.log("observer", message);
-  }
-};
-broker.addSubscription("router", observer);
-router.listen();
-```
+   ```javascript
+   let observer = {
+   onMessage: (topic, message) => {
+   console.log("observer", message);
+   }
+   };
+   broker.addSubscription("router", observer);
+   router.listen();
+   ```
 
-**Remark:** BoB.Element instances can subscribe to any topic.
+   **Remark:** BoB.Element instances can subscribe to any topic.
 
-#### match
+   #### match
 
-- `@param uri`
+   - `@param uri`
 
-the `match` method works with the `uri` parameter:
+   the `match` method works with the `uri` parameter:
 
-- removes `#/` from uri, ie: `http://localhost:3006/#/hello/bob/morane` becomes `/hello/bob/morane`
-- extracts "parameters" of the uri, ie: `["bob", "morane"]`
-- extracts "route", ie: `"hello"` 
-- and then notify the messages broker when popstate event
+   - removes `#/` from uri, ie: `http://localhost:3006/#/hello/bob/morane` becomes `/hello/bob/morane`
+   - extracts "parameters" of the uri, ie: `["bob", "morane"]`
+   - extracts "route", ie: `"hello"` 
+   - and then notify the messages broker when popstate event
 
-#### listen
+   #### listen
 
-Description: (wip)
+   Description: (wip)
 
-*/
+   */
   class Router {
 
     constructor (options={}) {
@@ -243,7 +245,7 @@ Description: (wip)
       let uriParts = uri.split("/").filter((part)=>part.length>0);
       let route = uriParts[0];
       let params = uriParts.slice(1);
-      
+
       (this.broker !== undefined && this.topic !== undefined
         ? () => this.broker.notify(this.topic, {route, params, uri})
         : () => {throw Error(`${this.constructor.name}: broker or/and topic is(are) undefined!`);})();
@@ -260,27 +262,27 @@ Description: (wip)
     }
   }
 
-/*[md]
-## Class Model
+  /*[md]
+   ## Class Model
 
-### Sample
+   ### Sample
 
-```javascript
-class Cow extends BoB.Model {
-  constructor(fields, broker) {
-    super(
-      fields,
-      {
-        broker: broker,
-        topic:"model/cow",
-        events:{onSet:true, onSave:true, onFetch:true, onRemove:true},
-        url:"/api/cows"
-      }
-    );
-  }
-}
-```
-*/
+   ```javascript
+   class Cow extends BoB.Model {
+   constructor(fields, broker) {
+   super(
+   fields,
+   {
+   broker: broker,
+   topic:"model/cow",
+   events:{onSet:true, onSave:true, onFetch:true, onRemove:true},
+   url:"/api/cows"
+   }
+   );
+   }
+   }
+   ```
+   */
   class Model {
     constructor(fields, options) {
       this.fields = fields;
@@ -296,7 +298,7 @@ class Cow extends BoB.Model {
     }
 
     unsubscribe (topic) {
-    //TODO
+      //TODO
     }
 
     publish (topic, message) {
@@ -371,7 +373,7 @@ class Cow extends BoB.Model {
           this.state.updated = Date();
           return data;
         }).catch((error) => error);
-        
+
       }
     }
 
@@ -415,25 +417,25 @@ class Cow extends BoB.Model {
 
   }
 
-/*[md]
-## Class Collection
+  /*[md]
+   ## Class Collection
 
-### Sample
+   ### Sample
 
- ```javascript
-class Cows extends BoB.Collection {
-  constructor(broker) {
-    super({
-      model: Cow
-      broker: broker,
-      topic:"collection/cows",
-      events:{onAdd:true, onFetch:true},
-      url:"/api/cows"
-    });
-  }
-}
- ```
-*/
+   ```javascript
+   class Cows extends BoB.Collection {
+   constructor(broker) {
+   super({
+   model: Cow
+   broker: broker,
+   topic:"collection/cows",
+   events:{onAdd:true, onFetch:true},
+   url:"/api/cows"
+   });
+   }
+   }
+   ```
+   */
   class Collection {
 
     constructor (options) {
@@ -457,7 +459,7 @@ class Cows extends BoB.Collection {
         ? () => this.broker.notify(topic, message)
         : () => {throw Error(`${this.constructor.name}: broker is undefined!`);})();
     }
-    
+
     add (model) { // model
       this.models.push(model);
       // Notifications
@@ -469,7 +471,7 @@ class Cows extends BoB.Collection {
       return new Promise((resolve, reject) => {
         resolve(model);
       });
-      
+
     }
 
     addFields (fields) { // model fields
@@ -529,7 +531,7 @@ class Cows extends BoB.Collection {
     }
 
     size () { return this.models.length; }
-    
+
     toObjects () {
       let models = [];
       this.each((model) => models.push(model.fields));
@@ -601,12 +603,12 @@ class Cows extends BoB.Collection {
       }
     }
   }
-  
+
   BoB.Element = Element;
   BoB.Broker = Broker;
   BoB.Router = Router;
 
   BoB.Model = Model;
   BoB.Collection = Collection;
-  
+
 })(root.BoB || exports);
